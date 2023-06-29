@@ -1,32 +1,21 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System;
-using System.Threading;
+﻿using Reporter;
 
-
-
-
-class Program
+List<Empployee> employees = new()
 {
-    static void Main(string[] args)
-    {
-        Console.Write("Введите число: ");
-        int n = int.Parse(Console.ReadLine());
-        int result = Factorial(n);
-        Console.WriteLine($"Факториал числа {n} равен {result}");
-    }
+    new Empployee {Name = "Ivan", Salary = 100},
+    new Empployee {Name = "Boris", Salary = 50},
+    new Empployee {Name = "Fedor", Salary = 200}
 
-    static int Factorial(int n)
-    {
-        if (n == 0)
-        {
-            return 1;
-        }
-        else
-        {
-            return n * Factorial(n - 1);
-        }
-    }
-}
+};
+
+var builder = new EmployeeReportBuilder(employees);
+
+var director = new EmployeeReportDirector(builder);
+
+director.Build();
+
+var report = builder.GetReport();
+
+Console.WriteLine(report);
+
+Console.ReadKey();
