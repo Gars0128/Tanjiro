@@ -1,21 +1,50 @@
-﻿using Reporter;
+﻿using FitnessClub.Domain;
+using FitnessClub.Factoriesa;
 
-List<Empployee> employees = new()
+class Program
 {
-    new Empployee {Name = "Ivan", Salary = 100},
-    new Empployee {Name = "Boris", Salary = 50},
-    new Empployee {Name = "Fedor", Salary = 200}
 
-};
+    static void Main()
+    {
 
-var builder = new EmployeeReportBuilder(employees);
+        Console.WriteLine(">>> Welcome to FitnessCLub CRM <<<\n");
+        Console.WriteLine("> Enter the memberhsip type u would like to create: ");
+        Console.WriteLine(" > G - Gym ");
+        Console.WriteLine(" > P - Gym  + Pool");
+        Console.WriteLine(" > T  - Personal Training ");
 
-var director = new EmployeeReportDirector(builder);
+        string membershipType = Console.ReadLine();
 
-director.Build();
+        MembershipFactory factory = GetFactory(membershipType);
 
-var report = builder.GetReport();
+        IMembership membership = factory.GetMembership();
 
-Console.WriteLine(report);
+        Console.WriteLine("\n> Membership you have chosen : \n");
 
-Console.ReadKey();
+
+        Console.WriteLine(
+            $"\tName:\t\t{membership.Name}\n" +
+            $"\tDescription:\t{membership.Description}\n" +
+            $"\tPrice:\t\t{membership.GetPrice()}");
+
+
+
+        Console.ReadLine();
+    }
+
+    
+
+
+    private static MembershipFactory GetFactory(string membershipType) =>
+
+        membershipType.ToLower() switch
+        {
+
+            "g" => new GymMembershipFactory(100, "Basic Membership"),
+            "p" => new GymPlusPoolMembershipFactory(250, "Good Price Membership"),
+            "t" => new PersonalTraingingMembershipFactory(400, "Best Price Membership"),
+            _ => null
+
+
+        };
+}
